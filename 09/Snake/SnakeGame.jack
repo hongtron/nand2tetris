@@ -1,0 +1,106 @@
+/**
+ * Implements the Snake game.  See README for description of gameplay.
+ * The 'q' key is used to quit the game.
+ */
+class SnakeGame {
+
+    // The snake
+    field Snake snake;
+
+    // The food
+    field int foodX, foodY;
+
+    // The snake's movement direction
+    field int direction; // 0=none,1=up,2=down,3=left,4=right
+
+    /** Constructs a new Snake Game. */
+    constructor SnakeGame new(int seed) {
+        var int xInit, yInit;
+        do Random.setSeed(seed);
+        // generate random x and y coordinates for the initial position of the head.
+        let xInit = 0;
+        // make sure snake.draw() doesn't try to paint illegal pixel
+        while (xInit < 6) {
+          let xInit = Random.randRange(511);
+        }
+        let yInit = Random.randRange(255);
+        // create initial piece of food
+        do generateFood();
+        let snake = Snake.new(xInit, yInit);
+        let direction = 0;
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do snake.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Starts the game. Handles inputs from the user that control
+     *  the snake's movement. */
+    method void run() {
+        var char key;
+        var boolean exit;
+
+        let exit = false;
+
+        while (~exit) {
+            // waits for a key to be pressed.
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                do moveSnake();
+            }
+
+            if (key = 81) {
+                let exit = true;
+            }
+
+            if (key = 131) {
+                let direction = 1;
+            }
+            if (key = 133) {
+                let direction = 2;
+            }
+            if (key = 130) {
+                let direction = 3;
+            }
+            if (key = 132) {
+                let direction = 4;
+            }
+
+            // waits for the key to be released.
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+                do moveSnake();
+            }
+        }
+
+        return;
+	}
+
+    /** Moves the snake in the current direction. */
+    method void moveSnake() {
+        var int snakeHeadX, snakeHeadY;
+        do snake.move(direction);
+        let snakeHeadX = snake.getHeadXPos();
+        let snakeHeadY = snake.getHeadYPos();
+        if ((snakeHeadX = foodX) & (snakeHeadY = foodY)) {
+          do snake.grow();
+          do generateFood();
+        }
+        do Sys.wait(35); // Delays the next movement.
+        return;
+    }
+
+    /** Creates a new piece of food at a random position on the screen. */
+    method void generateFood() {
+      let foodX = Random.randRange(511);
+      let foodY = Random.randRange(255);
+      do Screen.setColor(true);
+      do Screen.drawPixel(foodX, foodY);
+      return;
+    }
+}

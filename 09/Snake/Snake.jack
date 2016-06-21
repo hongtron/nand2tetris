@@ -1,0 +1,143 @@
+    /** The Snake that is controlled by the player. */
+class Snake {
+
+    // Body of snake
+    field array body;
+
+    // The length of the snake
+    field int length;
+
+    // Is the game over?
+    field boolean gameOver;
+
+    /** Constructs a new snake with a given location and size. */
+    constructor Snake new(int Ax, int Ay) {
+        let gameOver = false;
+        let body = Array.new(100); // allow snake to grow up to 50 pixels long; body array goes xyxyxy... where each xy pair are the coordinate of the next body pixel
+        let body[0] = Ax;
+        let body[1] = Ay;
+        let length = 5; // give initial length of 5
+        let body[2] = Ax-1;
+        let body[3] = Ay;
+        let body[4] = Ax-2;
+        let body[5] = Ay;
+        let body[6] = Ax-3;
+        let body[7] = Ay;
+        let body[8] = Ax-4;
+        let body[9] = Ay;
+
+        do draw();
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws the snake on the screen. */
+    method void draw() {
+        var int i;
+        do Screen.setColor(true);
+        let i = 0;
+        while (i < length) {
+          do Screen.drawPixel(body[i], body[i+1]);
+          let i = i + 2;
+        }
+        return;
+    }
+
+    /** Get the x coordinate of the snake's head.  Used for determining whether you've found food. */
+    method int getHeadXPos() {
+      return body[0];
+    }
+
+    /** Get the y coordinate of the snake's head.  Used for determining whether you've found food. */
+    method int getHeadYPos() {
+      return body[1];
+    }
+
+    /** Grow the snake when you've found food.  Also determine whether you've won yet. */
+    method void grow() {
+      let length = length + 15;
+      if (length > 49) {
+        do Output.moveCursor(0,0);
+        do Output.printString("You win!");
+        do Sys.halt();
+      }
+      return;
+    }
+
+    /** Move the snake. */
+    method void move(int direction) {
+      var int i;
+      if ((direction = 1) | (direction = 2) | (direction = 3) | (direction = 4)) {
+        do Screen.setColor(false);
+        do Screen.drawPixel(body[(length - 1) * 2], body[(length * 2) - 1]); // paint tail pixel white before making more changes
+        let i = (length - 2) * 2;
+        // go from tail to head, moving each xy pair closer to the current head position to create movement
+        while (i > -1) {
+          let body[i+2] = body[i];
+          let body[i+3] = body[i+1];
+          let i = i - 2;
+        }
+      }
+
+      // up
+      if (direction = 1) {
+        let body[1] = body[1] - 1;
+        if (body[1] < 0) {
+          let gameOver = true;
+        }
+      }
+
+      // down
+      if (direction = 2) {
+        let body[1] = body[1] + 1;
+        if (body[1] > 255) {
+          let gameOver = true;
+        }
+      }
+
+      // left
+      if (direction = 3) {
+        let body[0] = body[0] - 1;
+        if (body[0] < 0) {
+          let gameOver = true;
+        }
+      }
+
+      // right
+      if (direction = 4) {
+        let body[0] = body[0] + 1;
+        if (body[0] > 511) {
+          let gameOver = true;
+        }
+      }
+
+      // check for self-collision
+      let i = (length - 1) * 2;
+      while (i > 1) {
+        if ((body[0] = body[i]) & (body[1] = body[i+1])) {
+          let gameOver = true;
+        }
+        let i = i - 2;
+      }
+
+      if (~gameOver) {
+        do Screen.setColor(true);
+        do Screen.drawPixel(body[0], body[1]);
+      }
+      else {
+        do Output.moveCursor(0,0);
+        do Output.printString("Game Over");
+        do Sys.halt();
+      }
+      return;
+    }
+
+
+
+}

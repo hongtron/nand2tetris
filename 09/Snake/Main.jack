@@ -1,0 +1,27 @@
+/**
+ * The Main class initializes a new Snake game and starts it. Gets a PRNG seed from user input.
+ */
+class Main {
+
+    /** Initializes a new game and starts it. */
+    function void main() {
+        var SnakeGame game;
+        var int seed;
+        let seed = 0;
+        do Output.printString("Press any key to play!");
+        while (Keyboard.keyPressed() = 0) {
+          if (seed = 30000) {
+            let seed = 0; // make sure seed doesn't grow too large
+          }
+          else {
+            let seed = seed + 1;
+          }
+        }
+        do Screen.clearScreen();
+        let game = SnakeGame.new(seed);
+        do game.run();
+        do game.dispose();
+
+        return;
+    }
+}

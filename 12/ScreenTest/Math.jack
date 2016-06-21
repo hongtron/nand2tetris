@@ -1,0 +1,142 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A basic math library.
+ */
+class Math {
+    static Array powersOfTwo;
+
+    /** Initializes the library. */
+    function void init() {
+      let powersOfTwo = Array.new(16);
+      let powersOfTwo[0] = 1;
+      let powersOfTwo[1] = 2;
+      let powersOfTwo[2] = 4;
+      let powersOfTwo[3] = 8;
+      let powersOfTwo[4] = 16;
+      let powersOfTwo[5] = 32;
+      let powersOfTwo[6] = 64;
+      let powersOfTwo[7] = 128;
+      let powersOfTwo[8] = 256;
+      let powersOfTwo[9] = 512;
+      let powersOfTwo[10] = 1024;
+      let powersOfTwo[11] = 2048;
+      let powersOfTwo[12] = 4096;
+      let powersOfTwo[13] = 8192;
+      let powersOfTwo[14] = 16384;
+      let powersOfTwo[15] = 16384+16384; // MAXINT is 32,767
+      return;
+    }
+
+    function int powersOfTwo(int x) {
+      return powersOfTwo[x];
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+      if (x < 0) {
+        return -x;
+      }
+      else {
+        return x;
+      }
+    }
+
+    /** Returns the product of x and y. */
+    function int multiply(int x, int y) {
+      var int sum, shiftedX, j;
+      let sum = 0;
+      let shiftedX = x;
+      let j = 0;
+
+      while (j < 16) {
+        if (Math.bit(y, j)) {
+          let sum = sum + shiftedX;
+        }
+        let shiftedX = shiftedX + shiftedX;
+        let j = j + 1;
+      }
+      return sum;
+    }
+
+    /** Returns the integer part of x/y. */
+    function int divide(int x, int y) {
+      var int q, result;
+      var boolean xIsNeg, yIsNeg;
+      let xIsNeg = (x < 0);
+      let yIsNeg = (y < 0);
+      let x = Math.abs(x);
+      let y = Math.abs(y);
+      if (y > x) {
+        return 0;
+      }
+      let q = Math.divide(x, y + y);
+      if (x - (2 * q * y) < y) {
+        let result = 2 * q;
+      }
+      else {
+        let result = (2 * q) + 1;
+      }
+      if (~(xIsNeg = yIsNeg)) {
+        return -result;
+      }
+      else {
+        return result;
+      }
+    }
+
+    /** used in Screen implementation */
+    function int mod(int x, int y) {
+      var int quotient;
+      let quotient = Math.divide(x, y);
+      return (x - Math.multiply(quotient, y));
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+      var int y, j, currentEstimate, estimateSq;
+      let y = 0;
+      let j = 7; // 16/2 - 1 = 7
+      while (j > -1) {
+        let currentEstimate = y + powersOfTwo[j];
+        let estimateSq = currentEstimate * currentEstimate;
+        if (~(estimateSq > x) & (estimateSq > 0)) { // handle overflow (p. 268)
+          let y = currentEstimate;
+        }
+        let j = j - 1;
+      }
+      return y;
+    }
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+      if (a > b) {
+        return a;
+      }
+      else {
+        return b;
+      }
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+      if (a < b) {
+        return a;
+      }
+      else {
+        return b;
+      }
+    }
+
+    function boolean bit(int x, int j) {
+      if (x & powersOfTwo[j] = 0) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+}

@@ -1,0 +1,27 @@
+<tokens>
+<keyword> class </keyword>
+<identifier> Bar </identifier>
+<symbol> { </symbol>
+<keyword> method </keyword>
+<identifier> Fraction </identifier>
+<identifier> foo </identifier>
+<symbol> ( </symbol>
+<keyword> int </keyword>
+<identifier> y </identifier>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<identifier> temp </identifier>
+<symbol> ; </symbol>
+<keyword> let </keyword>
+<identifier> temp </identifier>
+<symbol> = </symbol>
+<symbol> ( </symbol>
+<identifier> xxx </identifier>
+<symbol> + </symbol>
+<symbol> + </symbol>
+<integerConstant> 12 </integerConstant>
+<symbol> ) </symbol>
+<symbol> * </symbol>
+<symbol> - </symbol>

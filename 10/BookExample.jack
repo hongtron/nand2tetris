@@ -1,0 +1,7 @@
+class Bar {
+  method Fraction foo(int y) {
+    var int temp;
+    let temp = (xxx+12)*-63;
+    return x;
+  }
+}
